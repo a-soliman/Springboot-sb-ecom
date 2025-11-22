@@ -4,9 +4,12 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.ecommerce.project.exceptions.ResourceListEmptyException;
 import com.ecommerce.project.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.exceptions.ResourceUniquenessViolationException;
 import com.ecommerce.project.model.Category;
@@ -17,7 +20,6 @@ import com.ecommerce.project.repositories.CategoryRepository;
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private String RESOURCE = "category";
-    private String RESOURCE_LIST = "categories";
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -26,15 +28,24 @@ public class CategoryServiceImpl implements CategoryService {
     private ModelMapper modelMapper;
 
     @Override
-    public CategoryResponse getAllCategories() {
-        final List<Category> categories = categoryRepository.findAll();
-        if (categories.isEmpty()) {
-            throw new ResourceListEmptyException(RESOURCE_LIST);
-        }
+    public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+        Page<Category> categoryPage = categoryRepository.findAll(pageDetails);
+        final List<Category> categories = categoryPage.getContent();
         final List<CategoryDTO> categoryDTOs = categories.stream()
                 .map(category -> modelMapper.map(category, CategoryDTO.class))
                 .toList();
-        final CategoryResponse response = new CategoryResponse(categoryDTOs);
+        final CategoryResponse response = CategoryResponse.builder()
+                .content(categoryDTOs)
+                .pageNumber(categoryPage.getNumber())
+                .pageSize(categoryPage.getSize())
+                .totalElements(categoryPage.getTotalElements())
+                .totalPages(categoryPage.getTotalPages())
+                .lastPage(categoryPage.isLast())
+                .build();
         return response;
     }
 
