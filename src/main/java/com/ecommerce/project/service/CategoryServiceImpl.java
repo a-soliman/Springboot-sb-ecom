@@ -32,20 +32,21 @@ public class CategoryServiceImpl implements CategoryService {
             throw new ResourceListEmptyException(RESOURCE_LIST);
         }
         final List<CategoryDTO> categoryDTOs = categories.stream()
-            .map(category -> modelMapper.map(category, CategoryDTO.class))
-            .toList();
+                .map(category -> modelMapper.map(category, CategoryDTO.class))
+                .toList();
         final CategoryResponse response = new CategoryResponse(categoryDTOs);
         return response;
     }
 
     @Override
-    public Category createCategory(Category category) {
+    public CategoryDTO createCategory(Category category) {
         final Category dbCategory = categoryRepository.findByCategoryName(category.getCategoryName());
         if (dbCategory != null) {
             throw new ResourceUniquenessViolationException(RESOURCE, "categoryName", category.getCategoryName());
         }
         Category savedCategory = categoryRepository.save(category);
-        return savedCategory;
+        CategoryDTO response = modelMapper.map(savedCategory, CategoryDTO.class);
+        return response;
     }
 
     @Override

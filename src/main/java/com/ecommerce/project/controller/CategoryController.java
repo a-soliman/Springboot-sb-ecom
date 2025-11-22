@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.project.model.Category;
+import com.ecommerce.project.payload.CategoryDTO;
 import com.ecommerce.project.payload.CategoryResponse;
 import com.ecommerce.project.service.CategoryService;
 
@@ -39,9 +40,9 @@ public class CategoryController {
     }
 
     @PostMapping(PUBLIC_CATEGORIES_URL)
-    public ResponseEntity<Category> createCategory(@Valid @RequestBody Category category) {
-        final Category createdCategory = categoryService.createCategory(category);
-        return new ResponseEntity<Category>(createdCategory, HttpStatus.CREATED);
+    public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody Category category) {
+        final CategoryDTO response = categoryService.createCategory(category);
+        return new ResponseEntity<CategoryDTO>(response, HttpStatus.CREATED);
     }
 
     @PutMapping(ADMIN_CATEGORIES_URL + "/{categoryId}")
