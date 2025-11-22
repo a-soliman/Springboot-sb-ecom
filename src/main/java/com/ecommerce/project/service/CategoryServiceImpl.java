@@ -50,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category updateCategory(long categoryId, Category category) throws RuntimeException {
+    public CategoryDTO updateCategory(long categoryId, Category category) throws RuntimeException {
         // Throw if we have another category with the same name
         Category dbCategory = categoryRepository.findByCategoryName(category.getCategoryName());
         if (dbCategory != null) {
@@ -68,7 +68,8 @@ public class CategoryServiceImpl implements CategoryService {
 
         // Save the updated category in the db and return it
         final Category updatedCategory = categoryRepository.save(dbCategory);
-        return updatedCategory;
+        final CategoryDTO response = modelMapper.map(updatedCategory, CategoryDTO.class);
+        return response;
     }
 
     @Override

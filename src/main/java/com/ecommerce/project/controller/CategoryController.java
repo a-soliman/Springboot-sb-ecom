@@ -46,14 +46,14 @@ public class CategoryController {
     }
 
     @PutMapping(ADMIN_CATEGORIES_URL + "/{categoryId}")
-    public ResponseEntity<Category> updateCategory(@PathVariable long categoryId,
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable long categoryId,
             @RequestBody Category categoryRequestBody) {
         final Category category = Category.builder()
                 .categoryName(categoryRequestBody.getCategoryName())
                 .categoryId(categoryId).build();
-        final Category updatedCategory = categoryService
+        final CategoryDTO response = categoryService
                 .updateCategory(categoryId, category);
-        return new ResponseEntity<Category>(updatedCategory, HttpStatus.OK);
+        return new ResponseEntity<CategoryDTO>(response, HttpStatus.OK);
     }
 
     @DeleteMapping(ADMIN_CATEGORIES_URL + "/{categoryId}")
