@@ -40,19 +40,16 @@ public class CategoryController {
     }
 
     @PostMapping(PUBLIC_CATEGORIES_URL)
-    public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody Category category) {
-        final CategoryDTO response = categoryService.createCategory(category);
+    public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
+        final CategoryDTO response = categoryService.createCategory(categoryDTO);
         return new ResponseEntity<CategoryDTO>(response, HttpStatus.CREATED);
     }
 
     @PutMapping(ADMIN_CATEGORIES_URL + "/{categoryId}")
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable long categoryId,
-            @RequestBody Category categoryRequestBody) {
-        final Category category = Category.builder()
-                .categoryName(categoryRequestBody.getCategoryName())
-                .categoryId(categoryId).build();
+            @RequestBody CategoryDTO categoryDTO) {
         final CategoryDTO response = categoryService
-                .updateCategory(categoryId, category);
+                .updateCategory(categoryId, categoryDTO);
         return new ResponseEntity<CategoryDTO>(response, HttpStatus.OK);
     }
 

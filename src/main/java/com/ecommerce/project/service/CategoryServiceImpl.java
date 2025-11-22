@@ -39,7 +39,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDTO createCategory(Category category) {
+    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
+        final Category category = modelMapper.map(categoryDTO, Category.class);
         final Category dbCategory = categoryRepository.findByCategoryName(category.getCategoryName());
         if (dbCategory != null) {
             throw new ResourceUniquenessViolationException(RESOURCE, "categoryName", category.getCategoryName());
@@ -50,7 +51,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDTO updateCategory(long categoryId, Category category) throws RuntimeException {
+    public CategoryDTO updateCategory(long categoryId, CategoryDTO categoryDto) throws RuntimeException {
+        final Category category = modelMapper.map(categoryDto, Category.class);
+
         // Throw if we have another category with the same name
         Category dbCategory = categoryRepository.findByCategoryName(category.getCategoryName());
         if (dbCategory != null) {
