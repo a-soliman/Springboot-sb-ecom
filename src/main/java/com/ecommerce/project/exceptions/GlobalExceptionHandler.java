@@ -1,6 +1,5 @@
 package com.ecommerce.project.exceptions;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +13,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import jakarta.validation.constraints.NotNull;
+import com.ecommerce.project.payload.ApiResponse.ApiResponse;
+import com.ecommerce.project.payload.ApiResponse.ApiResponseError;
+import com.ecommerce.project.payload.ApiResponse.FailureApiResponse;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -36,26 +37,32 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<JsonException> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        final JsonException jsonException = new JsonException(ex.getMessage(), HttpStatus.NOT_FOUND);
-        logger.error("Resource Not found exception, " + jsonException.toString());
-        return new ResponseEntity<JsonException>(jsonException, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ApiResponse<Void>> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        final ApiResponseError apiResponseError = ApiResponseError.builder().message(ex.getMessage())
+                .statusCode(HttpStatus.NOT_FOUND).build();
+        final FailureApiResponse response = new FailureApiResponse(apiResponseError);
+        logger.error("❌ Resource Not found exception, " + response.getError().toString());
+        return new ResponseEntity<ApiResponse<Void>>(response, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ResourceUniquenessViolationException.class)
-    public ResponseEntity<JsonException> handleResourceUniquenessViolationException(
+    public ResponseEntity<ApiResponse<Void>> handleResourceUniquenessViolationException(
             ResourceUniquenessViolationException ex) {
-        final JsonException jsonException = new JsonException(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        logger.error("Resource Uniqueness exception, " + ex.getMessage());
-        return new ResponseEntity<JsonException>(jsonException, HttpStatus.BAD_REQUEST);
+        final ApiResponseError apiResponseError = ApiResponseError.builder().message(ex.getMessage())
+                .statusCode(HttpStatus.BAD_REQUEST).build();
+        final FailureApiResponse response = new FailureApiResponse(apiResponseError);
+        logger.error("❌ Resource Uniqueness exception, " + response.getError().toString());
+        return new ResponseEntity<ApiResponse<Void>>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ResourceListEmptyException.class)
-    public ResponseEntity<JsonException> handleResourceListEmptyException(
+    public ResponseEntity<ApiResponse<Void>> handleResourceListEmptyException(
             ResourceListEmptyException ex) {
-        final JsonException jsonException = new JsonException(ex.getMessage(), HttpStatus.NOT_FOUND);
-        logger.error("Resource List Empty exception, " + ex.getMessage());
-        return new ResponseEntity<JsonException>(jsonException, HttpStatus.NOT_FOUND);
+        final ApiResponseError apiResponseError = ApiResponseError.builder().message(ex.getMessage())
+                .statusCode(HttpStatus.NOT_FOUND).build();
+        final FailureApiResponse response = new FailureApiResponse(apiResponseError);
+        logger.error("❌ Resource List Empty exception, " + response.getError().toString());
+        return new ResponseEntity<ApiResponse<Void>>(response, HttpStatus.NOT_FOUND);
     }
 
 }
