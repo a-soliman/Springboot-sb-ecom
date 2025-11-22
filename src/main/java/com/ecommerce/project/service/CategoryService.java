@@ -11,5 +11,5 @@ public interface CategoryService {
 
     CategoryDTO updateCategory(long categoryId, Category category) throws RuntimeException;
 
-    String deleteCategory(long categoryId) throws RuntimeException;
+    CategoryDTO deleteCategory(long categoryId) throws RuntimeException;
 }

@@ -73,7 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public String deleteCategory(long categoryId) throws RuntimeException {
+    public CategoryDTO deleteCategory(long categoryId) throws RuntimeException {
         try {
             final Category category = categoryRepository.findById(categoryId).orElse(null);
             if (category == null) {
@@ -81,11 +81,10 @@ public class CategoryServiceImpl implements CategoryService {
             }
 
             categoryRepository.deleteById(categoryId);
-
+            final CategoryDTO response = modelMapper.map(category, CategoryDTO.class);
+            return response;
         } catch (IllegalArgumentException ex) {
             throw new RuntimeException("id was not found");
         }
-
-        return "Category with categoryId: " + categoryId + " deleted successfully";
     }
 }
