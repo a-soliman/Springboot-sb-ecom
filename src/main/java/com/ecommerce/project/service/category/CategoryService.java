@@ -1,10 +1,11 @@
-package com.ecommerce.project.service;
+package com.ecommerce.project.service.category;
 
 import com.ecommerce.project.payload.CategoryDTO;
-import com.ecommerce.project.payload.CategoryResponse;
+import com.ecommerce.project.payload.ListResourceResponse;
 
 public interface CategoryService {
-    CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortby, String sortOrder);
+    ListResourceResponse<CategoryDTO> getAllCategories(Integer pageNumber, Integer pageSize, String sortby,
+            String sortOrder);
 
     CategoryDTO createCategory(CategoryDTO category);
 

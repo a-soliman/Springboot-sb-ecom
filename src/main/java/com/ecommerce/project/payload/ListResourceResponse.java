@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryResponse {
-    private List<CategoryDTO> content;
+public class ListResourceResponse<DTO> {
+    private List<DTO> content;
 
     private Integer pageNumber;
     private Integer pageSize;

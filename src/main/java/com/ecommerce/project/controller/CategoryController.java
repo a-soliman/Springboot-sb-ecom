@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.project.config.AppConstants;
 import com.ecommerce.project.payload.CategoryDTO;
-import com.ecommerce.project.payload.CategoryResponse;
+import com.ecommerce.project.payload.ListResourceResponse;
 import com.ecommerce.project.payload.ApiResponse.ApiResponse;
 import com.ecommerce.project.payload.ApiResponse.SuccessfulApiResponse;
-import com.ecommerce.project.service.CategoryService;
+import com.ecommerce.project.service.category.CategoryService;
 
 import jakarta.validation.Valid;
 
@@ -35,18 +35,19 @@ public class CategoryController {
     }
 
     @GetMapping(PUBLIC_CATEGORIES_URL)
-    public ResponseEntity<ApiResponse<CategoryResponse>> getAllCategories(
+    public ResponseEntity<ApiResponse<ListResourceResponse<CategoryDTO>>> getAllCategories(
             @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
             @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORY_BY, required = false) String sortBy,
             @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIRECTION, required = false) String sortOrder) {
         logger.info("getAllCategories was invoked");
 
-        final CategoryResponse categoryResponse = categoryService.getAllCategories(pageNumber, pageSize, sortBy,
+        final ListResourceResponse<CategoryDTO> categoryResponse = categoryService.getAllCategories(pageNumber,
+                pageSize, sortBy,
                 sortOrder);
-        final SuccessfulApiResponse<CategoryResponse> response = new SuccessfulApiResponse<CategoryResponse>(
+        final SuccessfulApiResponse<ListResourceResponse<CategoryDTO>> response = new SuccessfulApiResponse<ListResourceResponse<CategoryDTO>>(
                 categoryResponse);
-        return new ResponseEntity<ApiResponse<CategoryResponse>>(response, HttpStatus.OK);
+        return new ResponseEntity<ApiResponse<ListResourceResponse<CategoryDTO>>>(response, HttpStatus.OK);
     }
 
     @PostMapping(PUBLIC_CATEGORIES_URL)

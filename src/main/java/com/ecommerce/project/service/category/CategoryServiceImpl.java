@@ -1,4 +1,4 @@
-package com.ecommerce.project.service;
+package com.ecommerce.project.service.category;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import com.ecommerce.project.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.exceptions.ResourceUniquenessViolationException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.payload.CategoryDTO;
-import com.ecommerce.project.payload.CategoryResponse;
+import com.ecommerce.project.payload.ListResourceResponse;
 import com.ecommerce.project.repositories.CategoryRepository;
 
 @Service
@@ -28,7 +28,8 @@ public class CategoryServiceImpl implements CategoryService {
     private ModelMapper modelMapper;
 
     @Override
-    public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+    public ListResourceResponse<CategoryDTO> getAllCategories(Integer pageNumber, Integer pageSize, String sortBy,
+            String sortOrder) {
         Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
                 ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
@@ -38,7 +39,7 @@ public class CategoryServiceImpl implements CategoryService {
         final List<CategoryDTO> categoryDTOs = categories.stream()
                 .map(category -> modelMapper.map(category, CategoryDTO.class))
                 .toList();
-        final CategoryResponse response = CategoryResponse.builder()
+        final ListResourceResponse<CategoryDTO> response = ListResourceResponse.<CategoryDTO>builder()
                 .content(categoryDTOs)
                 .pageNumber(categoryPage.getNumber())
                 .pageSize(categoryPage.getSize())
